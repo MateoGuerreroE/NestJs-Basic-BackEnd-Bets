@@ -8,8 +8,8 @@ export class User {
   @PrimaryColumn()
   userId: string;
 
-  @Column({ nullable: true })
-  firebaseId?: string;
+  @Column({ unique: true })
+  firebaseId: string;
 
   @Column()
   firstName: string;

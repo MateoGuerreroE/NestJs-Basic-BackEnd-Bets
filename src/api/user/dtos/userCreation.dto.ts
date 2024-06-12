@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsUppercase,
   Matches,
+  ValidateIf,
 } from 'class-validator';
 
 export class UserInput {
@@ -12,6 +13,9 @@ export class UserInput {
 
   @IsNotEmpty()
   lastName!: string;
+
+  @ValidateIf(() => false)
+  firebaseId!: string;
 
   @IsEmail()
   emailAddress!: string;

@@ -8,13 +8,10 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { FirebaseModule } from 'nestjs-firebase';
+import 'dotenv/config';
 
 @Module({
   imports: [
-    FirebaseModule.forRoot({
-      googleApplicationCredential: __dirname + '/firebase/firebaseConfgKey.ts',
-    }),
     ConfigModule,
     PassportModule,
     DatabaseModule,
