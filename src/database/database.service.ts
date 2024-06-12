@@ -2,7 +2,12 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Admin, Bet, Transaction, User } from './entities';
 import { Repository } from 'typeorm';
-import { AdminPermissions, BetFilters, TransactionFilers } from './types';
+import {
+  AdminPermissions,
+  BetFilters,
+  TransactionFilers,
+  UserUniqueAttributeFilters,
+} from './types';
 
 // This will be the only service to interact with DB directly.
 @Injectable()
@@ -24,6 +29,10 @@ export class DatabaseService {
 
   async getUserByEmail(userEmail: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { emailAddress: userEmail } });
+  }
+
+  async getUserByUniqueFilters(filters: UserUniqueAttributeFilters) {
+    return this.userRepository.findOne({ where: { ...filters } });
   }
 
   async updateUser(
