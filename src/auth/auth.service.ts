@@ -63,7 +63,7 @@ export class AuthService {
     }
   }
 
-  async loginUser(user: AuthLoginRequest) {
+  async loginUser(user: AuthLoginRequest): Promise<{ access_token: string }> {
     await this.validateCredentialsFirebase(user);
     const userRecord = await this.userService.getUserByUniqueAttributes({
       emailAddress: user.email,
