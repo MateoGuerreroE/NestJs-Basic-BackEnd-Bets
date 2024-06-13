@@ -15,6 +15,7 @@ import { ApiRequest, RequestUser } from '../../auth/guards/guard.types';
 import { permissionsValidator } from '../helpers/PermissionValidator';
 import { ApiResponse } from '../types/ApiResponse';
 import { User, UserUniqueAttributeFilters } from 'src/database';
+import { UserFilters } from './dtos/userFilters.dto';
 
 @Controller('user')
 export class UserController {
@@ -43,11 +44,26 @@ export class UserController {
     @Query() query: UserUniqueAttributeFilters,
   ): Promise<ApiResponse<User>> {
     const user: RequestUser = req.user;
-    permissionsValidator(user, { create: 'user' });
+    permissionsValidator(user, { get: 'user' });
     const foundUser: User = await this.userService.findUser({ ...query });
     return {
       statusCode: HttpStatus.OK,
       payload: foundUser,
+    };
+  }
+
+  @Post('list')
+  @UseGuards(JwtAuthGuard)
+  async getUsers(
+    @Req() req: ApiRequest,
+    @Body() filters: UserFilters,
+  ): Promise<ApiResponse<User[]>> {
+    const user: RequestUser = req.user;
+    permissionsValidator(user, { get: 'user' });
+    const userList: User[] = await this.userService.getUsers(filters);
+    return {
+      statusCode: HttpStatus.OK,
+      payload: userList,
     };
   }
 }

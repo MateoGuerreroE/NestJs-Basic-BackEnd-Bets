@@ -3,6 +3,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { UserInput } from './dtos/userCreation.dto';
 import { User, UserUniqueAttributeFilters } from 'src/database';
 import { generateNanoId } from '../helpers';
+import { UserFilters } from './dtos/userFilters.dto';
 
 @Injectable()
 export class UserService {
@@ -26,5 +27,9 @@ export class UserService {
       await this.databaseService.getUserByUniqueFilters(attributes);
     if (!user) throw new NotFoundException('User not found');
     return user;
+  }
+
+  async getUsers(filters: UserFilters): Promise<User[]> {
+    return this.databaseService.getAllUsers(filters);
   }
 }

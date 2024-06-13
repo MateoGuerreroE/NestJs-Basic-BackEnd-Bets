@@ -8,6 +8,7 @@ import {
   TransactionFilers,
   UserUniqueAttributeFilters,
 } from './types';
+import { UserFilters } from 'src/api/user/dtos/userFilters.dto';
 
 // This will be the only service to interact with DB directly.
 @Injectable()
@@ -31,6 +32,10 @@ export class DatabaseService {
     filters: UserUniqueAttributeFilters,
   ): Promise<User | null> {
     return this.userRepository.findOne({ where: { ...filters } });
+  }
+
+  async getAllUsers(filters: UserFilters): Promise<User[]> {
+    return this.userRepository.find({ where: { ...filters } });
   }
 
   async updateUser(
