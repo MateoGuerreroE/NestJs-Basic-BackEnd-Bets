@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { UserInput } from './dtos/userCreation.dto';
 import { User, UserUniqueAttributeFilters } from 'src/database';
@@ -21,7 +21,10 @@ export class UserService {
     return this.databaseService.createUser(userToCreate);
   }
 
-  async getUserByUniqueAttributes(attributes: UserUniqueAttributeFilters) {
-    return this.databaseService.getUserByUniqueFilters(attributes);
+  async findUser(attributes: UserUniqueAttributeFilters): Promise<User> {
+    const user: User | null =
+      await this.databaseService.getUserByUniqueFilters(attributes);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 }
