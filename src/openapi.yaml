@@ -1,0 +1,176 @@
+openapi: 3.0.3
+info:
+  title: PlayGreen API
+  description: |-
+    PlayGreen Bets API project documentation - This is intended as a project that will handle users and transactions in a betting system, allowing users to bet, deposit or withdraw. Currently implemented internally generated JWT Auth system and admin role/permissions for managing and maintaining.
+
+    Please note all routes have the /api/ prefix before the endpoint, which is omitted here.
+
+  contact:
+    email: mateof1223@gmail.com
+  version: 0.0.1
+externalDocs:
+  description: GitHub Repo
+  url: http://swagger.io
+servers:
+  - url: In progress
+tags:
+  - name: Users
+    description: Everything about user mutation and fetch
+  - name: Auth
+    description: Everything regarding auth process, login and register
+paths:
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Manually create an user
+      description: Create a user from an endpoint - It can only be done with admins who have the permission enabled
+      operationId: createUser
+      requestBody:
+        description: UserCreationDTO
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiSuccessResponse'
+                  - type: object
+                    required: ['statusCode', 'payload']
+                    properties:
+                      statusCode:
+                        type: number
+                        example: 200
+                      payload:
+                        type: object
+                        $ref: '#/components/schemas/UserInput'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiFailedResponse'
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login endpoint for users
+      description: 'Only users can authenticate using this endpoint'
+      operationId: loginUser
+      requestBody:
+        description: Auth Login Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthLoginRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - ref: '#/components/schemas/ApiSuccessResponse'
+                  - type: object
+                    required: ['statusCode', 'payload']
+                    properties:
+                      statusCode:
+                        type: number
+                      payload:
+                        type: object
+                        properties:
+                          access_token:
+                            type: string
+                            example: 'JWTAccessToken'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiFailedResponse'
+
+components:
+  schemas:
+    AuthLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: The email of the user
+        password:
+          type: string
+          description: The password of the user
+      required:
+        - email
+        - password
+    ApiSuccessResponse:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          description: Operation status code
+        payload:
+          type: object
+          nullable: true
+    ApiFailedResponse:
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+    UserInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: Last name of the user
+        firebaseId:
+          type: string
+          description: Firebase ID of the user
+          nullable: true
+        emailAddress:
+          type: string
+          format: email
+          description: Email address of the user
+        username:
+          type: string
+          description: Username of the user
+        gender:
+          type: string
+          description: Gender of the user
+          nullable: true
+        birthDate:
+          type: string
+          format: date
+          description: Birth date of the user
+          nullable: true
+        countryIdentifier:
+          type: string
+          description: >
+            Country Identifier must be 2 digit uppercase country code, e.g., US
+          pattern: '^[A-Z]{2}$'
+        idNumber:
+          type: string
+          description: ID number of the user
+          pattern: '^[a-zA-Z0-9]+$'
+      required:
+        - firstName
+        - lastName
+        - emailAddress
+        - username
+        - countryIdentifier
+        - idNumber
