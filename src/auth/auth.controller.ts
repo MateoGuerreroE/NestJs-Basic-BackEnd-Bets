@@ -10,7 +10,9 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
-  async login(@Body() body: AuthLoginRequest): Promise<ApiResponse> {
+  async login(
+    @Body() body: AuthLoginRequest,
+  ): Promise<ApiResponse<{ access_token: string }>> {
     const accessToken = await this.authService.loginUser(body);
     return {
       statusCode: HttpStatus.OK,
@@ -19,8 +21,10 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() body: AuthRegisterRequest) {
-    const result = this.authService.registerUser(body);
+  async register(
+    @Body() body: AuthRegisterRequest,
+  ): Promise<ApiResponse<string>> {
+    const result = await this.authService.registerUser(body);
     return {
       statusCode: HttpStatus.CREATED,
       payload: result,

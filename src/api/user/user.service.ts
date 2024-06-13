@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { UserInput } from './dtos/userCreation.dto';
 import { User, UserUniqueAttributeFilters } from 'src/database';
 import { generateNanoId } from '../helpers';
+import { UserFilters } from './dtos/userFilters.dto';
 
 @Injectable()
 export class UserService {
@@ -21,7 +22,14 @@ export class UserService {
     return this.databaseService.createUser(userToCreate);
   }
 
-  async getUserByUniqueAttributes(attributes: UserUniqueAttributeFilters) {
-    return this.databaseService.getUserByUniqueFilters(attributes);
+  async findUser(attributes: UserUniqueAttributeFilters): Promise<User> {
+    const user: User | null =
+      await this.databaseService.getUserByUniqueFilters(attributes);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  async getUsers(filters: UserFilters): Promise<User[]> {
+    return this.databaseService.getAllUsers(filters);
   }
 }

@@ -65,7 +65,7 @@ export class AuthService {
 
   async loginUser(user: AuthLoginRequest): Promise<{ access_token: string }> {
     await this.validateCredentialsFirebase(user);
-    const userRecord = await this.userService.getUserByUniqueAttributes({
+    const userRecord = await this.userService.findUser({
       emailAddress: user.email,
     });
     if (!userRecord) throw new UnauthorizedException('Invalid credential');
