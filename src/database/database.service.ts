@@ -27,11 +27,9 @@ export class DatabaseService {
     return this.userRepository.findOne({ where: { userId } });
   }
 
-  async getUserByEmail(userEmail: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { emailAddress: userEmail } });
-  }
-
-  async getUserByUniqueFilters(filters: UserUniqueAttributeFilters) {
+  async getUserByUniqueFilters(
+    filters: UserUniqueAttributeFilters,
+  ): Promise<User | null> {
     return this.userRepository.findOne({ where: { ...filters } });
   }
 
